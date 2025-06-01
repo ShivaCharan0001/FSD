@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>jQuery Image Slider</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <style type="text/css">
+        body {
+            background-color: black;
+        }
+
+        .slider {
+            margin-top: 10%;
+        }
+
+        .slider img {
+            display: none;
+            border: 2px solid white;
+        }
+
+        .slider img.active {
+            display: block;
+        }
+    </style>
+</head>
+<body>
+    <center>
+        <div class="slider">
+            <img src="images/1.jpg">
+            <img src="images/2.jpg">
+            <img src="images/3.jpg">
+            <img src="images/4.jpg" class="active">
+            <img src="images/5.jpg">
+        </div>
+
+        <br><br>
+        <input type="button" class="btn btn-primary" onclick="changeSlide('previous')" value="Previous">
+        <input type="button" class="btn btn-success" onclick="toggleSlideshow(this)" value="Start Slideshow">
+        <input type="button" class="btn btn-primary" onclick="changeSlide('next')" value="Next">
+    </center>
+
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <script type="text/javascript">
+        var slideshowInterval;
+
+        function toggleSlideshow(button) {
+            var isRunning = $(button).attr('value') === "Stop Slideshow";
+
+            if (isRunning) {
+                clearInterval(slideshowInterval);
+                $(button).attr('value', 'Start Slideshow').addClass('btn-success').removeClass('btn-danger');
+            } else {
+                slideshowInterval = setInterval(function () {
+                    changeSlide('next');
+                }, 2000);
+                $(button).attr('value', 'Stop Slideshow').addClass('btn-danger').removeClass('btn-success');
+            }
+        }
+
+        function changeSlide(direction) {
+            var currentImg = $('.slider img.active');
+            var targetImg = (direction === 'next') ? currentImg.next('img') : currentImg.prev('img');
+
+            if (targetImg.length === 0) {
+                targetImg = (direction === 'next') ? $('.slider img').first() : $('.slider img').last();
+            }
+
+            currentImg.fadeOut(500, function () {
+                $(this).removeClass('active');
+                targetImg.fadeIn(500).addClass('active');
+            });
+        }
+    </script>
+</body>
+</html>
